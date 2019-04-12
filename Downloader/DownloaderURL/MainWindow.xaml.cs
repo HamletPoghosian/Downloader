@@ -29,59 +29,21 @@ namespace DownloaderURL
 
 		private async  void ButtonDownloader_Click(object sender, RoutedEventArgs e)
 		{
-			using (WebClient client= new WebClient())
-			{
-				ButtonDownloader.IsEnabled = false;
-				TxtUrl.IsEnabled = false;
-				try
-				{
-					string folderPath = FolderCreater();
-					Uri address = new Uri(TxtUrl.Text);
-					string [] ar=address.Segments;
-					
-					string newFile = folderPath + @"\" + ar[ar.Length - 1];
-					FileCreater(newFile);
-					client.Credentials = CredentialCache.DefaultNetworkCredentials;
-					//client.BaseAddress = address.ToString();
+			string folderPath = FolderCreater();
+			Uri address = new Uri(TxtUrl.Text);
+			string[] ar = address.Segments;
 
-					await client.DownloadFileTaskAsync(address, newFile);
-					client.DownloadFileCompleted += Client_DownloadFileCompleted;
-					
-					
-				}
-				catch (UriFormatException ex)
-				{
-
-					MessageBox.Show(ex.Message);
-				}
-				catch (WebException ex )
-				{
-					MessageBox.Show(ex.Message);
-
-				}
-				catch (InvalidOperationException ex)
-				{
-					MessageBox.Show(ex.Message);
-
-				}
-				catch (Exception)
-				{
-
-					throw;
-				}
-				finally
-				{
-					ButtonDownloader.IsEnabled = true;
-					TxtUrl.IsEnabled = true;
-				}
-
-
-			}
+			string newFile = folderPath + @"\" + ar[ar.Length - 1];
+			FileCreater(newFile);
+			await Downloanding(address, newFile);
 
 
 		}
 
-		
+		private void Client_OpenWriteCompleted(object sender, OpenWriteCompletedEventArgs e)
+		{
+			MessageBox.Show("Downloading Completed");
+		}
 
 		private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
 		{
@@ -142,6 +104,52 @@ namespace DownloaderURL
 
 			}
 			
+		}
+
+		public async Task Downloanding(Uri url, string filename)
+		{
+			using (WebClient client = new WebClient())
+			{
+				ButtonDownloader.IsEnabled = false;
+				TxtUrl.IsEnabled = false;
+				try
+				{
+					
+		   await    client.DownloadFileTaskAsync(url, filename);
+					client.DownloadFileCompleted += Client_DownloadFileCompleted;
+					client.OpenWriteCompleted += Client_OpenWriteCompleted;
+
+				}
+				catch (UriFormatException ex)
+				{
+
+					MessageBox.Show(ex.Message);
+				}
+				catch (WebException ex)
+				{
+					MessageBox.Show(ex.Message);
+
+				}
+				catch (InvalidOperationException ex)
+				{
+					MessageBox.Show(ex.Message);
+
+				}
+				catch (Exception)
+				{
+
+					throw;
+				}
+				finally
+				{
+					ButtonDownloader.IsEnabled = true;
+					TxtUrl.IsEnabled = true;
+				}
+
+
+			}
+
+
 		}
 		}
 }
