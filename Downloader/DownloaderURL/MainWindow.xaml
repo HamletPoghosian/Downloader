@@ -5,8 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DownloaderURL"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="MainWindow" Height="318" Width="652">
+    <Grid Margin="1,0,7,-5" RenderTransformOrigin="0.5,0.5">
+        <Grid.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform/>
+                <RotateTransform Angle="-0.054"/>
+                <TranslateTransform/>
+            </TransformGroup>
+        </Grid.RenderTransform>
+        <TextBox x:Name="TxtUrl" HorizontalAlignment="Left" Height="47" Margin="27,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="521"/>
+        <Button x:Name="ButtonDownloader" Content="Download" HorizontalAlignment="Left" Height="46" Margin="562,12,0,0" VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.5,0.5" Click="ButtonDownloader_Click">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-0.727"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
+        <ProgressBar HorizontalAlignment="Left" Height="47" Margin="27,101,0,0" VerticalAlignment="Top" Width="521"/>
+
     </Grid>
 </Window>
