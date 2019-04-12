@@ -27,7 +27,7 @@ namespace DownloaderURL
 			InitializeComponent();
 		}
 
-		private async void ButtonDownloader_Click(object sender, RoutedEventArgs e)
+		private async  void ButtonDownloader_Click(object sender, RoutedEventArgs e)
 		{
 			using (WebClient client= new WebClient())
 			{
@@ -38,11 +38,15 @@ namespace DownloaderURL
 					string folderPath = FolderCreater();
 					Uri address = new Uri(TxtUrl.Text);
 					string [] ar=address.Segments;
+					
 					string newFile = folderPath + @"\" + ar[ar.Length - 1];
-					File.Create(newFile);
-					client.BaseAddress = address.ToString();
-					client.DownloadFileAsync(address, newFile);
+					FileCreater(newFile);
+					client.Credentials = CredentialCache.DefaultNetworkCredentials;
+					//client.BaseAddress = address.ToString();
 
+					await client.DownloadFileTaskAsync(address, newFile);
+					client.DownloadFileCompleted += Client_DownloadFileCompleted;
+					
 					
 				}
 				catch (UriFormatException ex)
@@ -77,6 +81,18 @@ namespace DownloaderURL
 
 		}
 
+		
+
+		private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+		{
+			MessageBox.Show("Downloading Completed");
+		}
+
+		private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+		{
+			
+		}
+
 		public  string FolderCreater()
 		{
 			string newFolder = "DownLoader";
@@ -105,5 +121,27 @@ namespace DownloaderURL
 			return  path;
 
 		}
-	}
+		public void FileCreater(string path)
+		{
+
+			if (!File.Exists(path))
+			{
+				try
+				{
+					File.Create(path);					
+				}
+				catch (IOException ie)
+				{
+					Console.WriteLine("IO Error: " + ie.Message);
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine("General Error: " + e.Message);
+					throw;
+				}
+
+			}
+			
+		}
+		}
 }
