@@ -22,37 +22,38 @@ namespace DownloaderURL
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		string folderPath;
 		public MainWindow()
 		{
+			 folderPath = FolderCreater();
 			InitializeComponent();
 		}
 
 		private async  void ButtonDownloader_Click(object sender, RoutedEventArgs e)
 		{
-			string folderPath = FolderCreater();
-			Uri address = new Uri(TxtUrl.Text);
-			string[] ar = address.Segments;
+			try
+			{
+				Uri address = new Uri(TxtUrl.Text);
+				string[] ar = address.Segments;
 
-			string newFile = folderPath + @"\" + ar[ar.Length - 1];
-			FileCreater(newFile);
-			await Downloanding(address, newFile);
+				string newFile = folderPath + @"\" + ar[ar.Length - 1];
+				FileCreater(newFile);
+				ButtonDownloader.IsEnabled = false;
+				TxtUrl.IsEnabled = false;
+				await Downloanding(address, newFile);
+
+			}
+			catch (UriFormatException ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
 
 
-		}
-
-		private void Client_OpenWriteCompleted(object sender, OpenWriteCompletedEventArgs e)
-		{
-			MessageBox.Show("Downloading Completed");
-		}
-
-		private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-		{
-			MessageBox.Show("Downloading Completed");
-		}
-
-		private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-		{
-			
 		}
 
 		public  string FolderCreater()
@@ -110,14 +111,13 @@ namespace DownloaderURL
 		{
 			using (WebClient client = new WebClient())
 			{
-				ButtonDownloader.IsEnabled = false;
-				TxtUrl.IsEnabled = false;
+				
 				try
 				{
+
+				    client.DownloadFileAsync(url, filename);
 					
-		   await    client.DownloadFileTaskAsync(url, filename);
-					client.DownloadFileCompleted += Client_DownloadFileCompleted;
-					client.OpenWriteCompleted += Client_OpenWriteCompleted;
+					client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
 
 				}
 				catch (UriFormatException ex)
@@ -151,5 +151,15 @@ namespace DownloaderURL
 
 
 		}
+
+		private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+		{					
+			double bytesIn = double.Parse(e.BytesReceived.ToString());
+			double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+			double percentage = bytesIn / totalBytes * 100;
+			progresBarForDownloading.Value = int.Parse(Math.Truncate(percentage).ToString());					   
 		}
+
+		
+	}
 }

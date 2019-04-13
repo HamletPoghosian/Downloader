@@ -26,7 +26,7 @@
                 </TransformGroup>
             </Button.RenderTransform>
         </Button>
-        <ProgressBar HorizontalAlignment="Left" Height="47" Margin="27,101,0,0" VerticalAlignment="Top" Width="521"/>
+        <ProgressBar x:Name="progresBarForDownloading" HorizontalAlignment="Left" Height="47" Margin="27,101,0,0" VerticalAlignment="Top" Width="521"/>
 
     </Grid>
 </Window>
