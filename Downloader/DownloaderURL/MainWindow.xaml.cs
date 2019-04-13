@@ -31,17 +31,15 @@ namespace DownloaderURL
 
 		private async  void ButtonDownloader_Click(object sender, RoutedEventArgs e)
 		{
+				ButtonDownloader.IsEnabled = false;
+				TxtUrl.IsEnabled = false;
 			try
 			{
 				Uri address = new Uri(TxtUrl.Text);
 				string[] ar = address.Segments;
-
 				string newFile = folderPath + @"\" + ar[ar.Length - 1];
 				FileCreater(newFile);
-				ButtonDownloader.IsEnabled = false;
-				TxtUrl.IsEnabled = false;
 				await Downloanding(address, newFile);
-
 			}
 			catch (UriFormatException ex)
 			{
@@ -142,8 +140,7 @@ namespace DownloaderURL
 				}
 				finally
 				{
-					ButtonDownloader.IsEnabled = true;
-					TxtUrl.IsEnabled = true;
+
 				}
 
 
