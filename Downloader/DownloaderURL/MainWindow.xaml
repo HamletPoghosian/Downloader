@@ -16,7 +16,7 @@
             </TransformGroup>
         </Grid.RenderTransform>
         <TextBox x:Name="TxtUrl" HorizontalAlignment="Left" Height="47" Margin="27,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="521"/>
-        <Button x:Name="ButtonDownloader" Content="Download" HorizontalAlignment="Left" Height="46" Margin="562,12,0,0" VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.5,0.5" Click="ButtonDownloader_Click">
+        <Button x:Name="ButtonDownloader" Content="Download" HorizontalAlignment="Left" Height="46" Margin="562,12,0,0" VerticalAlignment="Top" Width="63" RenderTransformOrigin="0.5,0.5" Click="ButtonDownloader_Click">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -27,6 +27,7 @@
             </Button.RenderTransform>
         </Button>
         <ProgressBar x:Name="progresBarForDownloading" HorizontalAlignment="Left" Height="47" Margin="27,71,0,0" VerticalAlignment="Top" Width="521"/>
+        <Button x:Name="buttonCancle" Content="Cancle" HorizontalAlignment="Left" Height="47" Margin="563,71,0,0" VerticalAlignment="Top" Width="63"/>
 
     </Grid>
 </Window>
