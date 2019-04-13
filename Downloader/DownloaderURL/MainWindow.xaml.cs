@@ -29,14 +29,14 @@ namespace DownloaderURL
 			folderPath = FolderCreater();
 			InitializeComponent();
 		}
-		CancellationTokenSource ctsForCalculation;
-
+		
 		CancellationTokenSource ctsForDownload;
 		private async void ButtonDownloader_Click(object sender, RoutedEventArgs e)
 		{
 			buttonCancle.IsEnabled = true;
 			ButtonDownloader.IsEnabled = false;
 			TxtUrl.IsEnabled = false;
+			progresBarForDownloading.Foreground = Brushes.Green;
 			try
 			{
 				Uri address = new Uri(TxtUrl.Text);
@@ -52,6 +52,7 @@ namespace DownloaderURL
 
 				ButtonDownloader.IsEnabled = true;
 				TxtUrl.IsEnabled = true;
+				buttonCancle.IsEnabled = false;
 
 			}
 			catch (Exception)
@@ -165,8 +166,15 @@ namespace DownloaderURL
 		}
 
 		private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-		{
-			progresBarForDownloading.Value = 0;
+		{			
+				if (e.Cancelled)
+				{
+					progresBarForDownloading.Foreground = Brushes.Red;
+				}
+				else
+				{
+					progresBarForDownloading.Value = 0;
+				}
 		}
 
 		private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
