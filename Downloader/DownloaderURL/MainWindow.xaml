@@ -27,7 +27,7 @@
             </Button.RenderTransform>
         </Button>
         <ProgressBar x:Name="progresBarForDownloading" HorizontalAlignment="Left" Height="47" Margin="27,71,0,0" VerticalAlignment="Top" Width="521"/>
-        <Button x:Name="buttonCancle" Content="Cancle" HorizontalAlignment="Left" Height="47" Margin="563,71,0,0" VerticalAlignment="Top" Width="63"/>
+        <Button x:Name="buttonCancle" Content="Cancle" HorizontalAlignment="Left" Height="47" Margin="563,71,0,0" VerticalAlignment="Top" Width="63" Click="buttonCancle_Click" IsEnabled="False"/>
 
     </Grid>
 </Window>

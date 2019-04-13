@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,9 +29,12 @@ namespace DownloaderURL
 			folderPath = FolderCreater();
 			InitializeComponent();
 		}
+		CancellationTokenSource ctsForCalculation;
 
+		CancellationTokenSource ctsForDownload;
 		private async void ButtonDownloader_Click(object sender, RoutedEventArgs e)
 		{
+			buttonCancle.IsEnabled = true;
 			ButtonDownloader.IsEnabled = false;
 			TxtUrl.IsEnabled = false;
 			try
@@ -40,6 +44,7 @@ namespace DownloaderURL
 				string newFile = folderPath + @"\" + ar[ar.Length - 1];
 				FileCreater(newFile);
 				await Downloanding(address, newFile);
+				
 			}
 			catch (UriFormatException ex)
 			{
@@ -118,9 +123,15 @@ namespace DownloaderURL
 				{
 
 					client.DownloadFileAsync(url, filename);
+					ctsForDownload = new CancellationTokenSource();
+					ctsForDownload.Token.Register(() =>
+					{
+						client.CancelAsync();
+					});
 
 					client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
 					client.DownloadFileCompleted += Client_DownloadFileCompleted;
+					
 				}
 				catch (UriFormatException ex)
 				{
@@ -166,6 +177,11 @@ namespace DownloaderURL
 			progresBarForDownloading.Value = int.Parse(Math.Truncate(percentage).ToString());
 		}
 
-
+		private void buttonCancle_Click(object sender, RoutedEventArgs e)
+		{
+			buttonCancle.IsEnabled = false;
+			ctsForDownload.Cancel();
+			ctsForDownload.Dispose();
+		}
 	}
 }
