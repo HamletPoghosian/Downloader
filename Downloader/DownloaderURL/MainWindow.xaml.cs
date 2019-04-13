@@ -25,14 +25,14 @@ namespace DownloaderURL
 		string folderPath;
 		public MainWindow()
 		{
-			 folderPath = FolderCreater();
+			folderPath = FolderCreater();
 			InitializeComponent();
 		}
 
-		private async  void ButtonDownloader_Click(object sender, RoutedEventArgs e)
+		private async void ButtonDownloader_Click(object sender, RoutedEventArgs e)
 		{
-				ButtonDownloader.IsEnabled = false;
-				TxtUrl.IsEnabled = false;
+			ButtonDownloader.IsEnabled = false;
+			TxtUrl.IsEnabled = false;
 			try
 			{
 				Uri address = new Uri(TxtUrl.Text);
@@ -44,6 +44,10 @@ namespace DownloaderURL
 			catch (UriFormatException ex)
 			{
 				MessageBox.Show(ex.Message);
+
+				ButtonDownloader.IsEnabled = true;
+				TxtUrl.IsEnabled = true;
+
 			}
 			catch (Exception)
 			{
@@ -54,7 +58,7 @@ namespace DownloaderURL
 
 		}
 
-		public  string FolderCreater()
+		public string FolderCreater()
 		{
 			string newFolder = "DownLoader";
 
@@ -66,7 +70,7 @@ namespace DownloaderURL
 			{
 				try
 				{
-					 Directory.CreateDirectory(path);
+					Directory.CreateDirectory(path);
 				}
 				catch (IOException ie)
 				{
@@ -77,9 +81,9 @@ namespace DownloaderURL
 					Console.WriteLine("General Error: " + e.Message);
 					throw;
 				}
-				
+
 			}
-			return  path;
+			return path;
 
 		}
 		public void FileCreater(string path)
@@ -89,7 +93,7 @@ namespace DownloaderURL
 			{
 				try
 				{
-					File.Create(path);					
+					File.Create(path);
 				}
 				catch (IOException ie)
 				{
@@ -102,21 +106,21 @@ namespace DownloaderURL
 				}
 
 			}
-			
+
 		}
 
 		public async Task Downloanding(Uri url, string filename)
 		{
 			using (WebClient client = new WebClient())
 			{
-				
+
 				try
 				{
 
-				    client.DownloadFileAsync(url, filename);
-					
-					client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+					client.DownloadFileAsync(url, filename);
 
+					client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+					client.DownloadFileCompleted += Client_DownloadFileCompleted;
 				}
 				catch (UriFormatException ex)
 				{
@@ -140,23 +144,28 @@ namespace DownloaderURL
 				}
 				finally
 				{
-
+					ButtonDownloader.IsEnabled = true;
+					TxtUrl.IsEnabled = true;
 				}
-
 
 			}
 
 
 		}
 
+		private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+		{
+			progresBarForDownloading.Value = 0;
+		}
+
 		private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-		{					
+		{
 			double bytesIn = double.Parse(e.BytesReceived.ToString());
 			double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
 			double percentage = bytesIn / totalBytes * 100;
-			progresBarForDownloading.Value = int.Parse(Math.Truncate(percentage).ToString());					   
+			progresBarForDownloading.Value = int.Parse(Math.Truncate(percentage).ToString());
 		}
 
-		
+
 	}
 }
